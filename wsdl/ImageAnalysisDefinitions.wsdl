@@ -1,0 +1,537 @@
+<wsdl:definitions targetNamespace="http://hostname.com/imageAnalysis/definitions" xmlns:iad="http://hostname.com/imageAnalysis/definitions" xmlns:ias="http://hostname.com/imageAnalysis/schema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+   <wsp:Policy wsu:Id="mtomBindingPolicy">
+      <wsp:ExactlyOne>
+         <wsp:All>
+            <wsoma:OptimizedMimeSerialization/>
+         </wsp:All>
+      </wsp:ExactlyOne>
+   </wsp:Policy>
+   <wsdl:types>
+      <xsd:schema targetNamespace="http://hostname.com/imageAnalysis/definitions">
+         <xsd:import namespace="http://hostname.com/imageAnalysis/schema" schemaLocation="ImageAnalysisSchema.xsd"/>
+         <xsd:element name="StartAnalysisRequest" type="ias:AnalysisRequest"/>
+         <xsd:element name="StartAnalysisResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="analysisRequestId" type="xsd:token"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="StopAnalysisRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="analysisRequestId" type="xsd:token"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="StopAnalysisResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="result" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetAnalysisResultRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="analysisRequestId" type="xsd:token"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetAnalysisResultResponse" type="ias:AnalysisResponse"/>
+         <xsd:element name="GetAnalysisProgressRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="analysisRequestId" type="xsd:token"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetAnalysisProgressResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="percentCompleted" type="xsd:float"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetAlgorithmInformationRequest">
+            <xsd:complexType/>
+         </xsd:element>
+         <xsd:element name="GetAlgorithmInformationResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="unbounded" name="algorithmInformation" type="ias:AlgorithmInformation"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ComputeAnalysisScoreRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ComputeAnalysisScoreResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="ComputeAggregateScoreRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="unbounded" name="analysisResults" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ComputeAggregateScoreResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="DeleteAnalysisResultRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DeleteAnalysisResultResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="result" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetMaximumNodeCapacityRequest">
+            <xsd:complexType/>
+         </xsd:element>
+         <xsd:element name="GetMaximumNodeCapacityResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="capacity" type="xsd:int"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetHeatmapImageRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GetHeatmapImageResponse" type="ias:Image"/>
+         <xsd:element name="AddCellRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+                  <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="AddCellResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="DeleteCellRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+                  <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DeleteCellResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="EditCellRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"/>
+                  <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="EditCellResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="DeleteROIAnalysisResultRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DeleteROIAnalysisResultResponse">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="1" name="result" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ComputeDBAggregateScoreRequest">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+               </xsd:sequence>
+               <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ComputeDBAggregateScoreResponse" type="ias:ParameterGroup"/>
+         <xsd:element name="ErrorMessage">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="ErrorCode" type="xsd:int"/>
+                  <xsd:element name="ErrorDetails" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="ImageAnalysis_StartAnalysis_InputMessage">
+      <wsdl:part name="parameters" element="iad:StartAnalysisRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_StartAnalysis_OutputMessage">
+      <wsdl:part name="parameters" element="iad:StartAnalysisResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_StopAnalysis_InputMessage">
+      <wsdl:part name="parameters" element="iad:StopAnalysisRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_StopAnalysis_OutputMessage">
+      <wsdl:part name="parameters" element="iad:StopAnalysisResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ErrorMessage">
+      <wsdl:part name="parameters" element="iad:ErrorMessage"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAnalysisResult_InputMessage">
+      <wsdl:part name="parameters" element="iad:GetAnalysisResultRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAnalysisResult_OutputMessage">
+      <wsdl:part name="parameters" element="iad:GetAnalysisResultResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAnalysisProgress_InputMessage">
+      <wsdl:part name="parameters" element="iad:GetAnalysisProgressRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAnalysisProgress_OutputMessage">
+      <wsdl:part name="parameters" element="iad:GetAnalysisProgressResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAlgorithmInformation_InputMessage">
+      <wsdl:part name="parameters" element="iad:GetAlgorithmInformationRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetAlgorithmInformation_OutputMessage">
+      <wsdl:part name="parameters" element="iad:GetAlgorithmInformationResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeAnalysisScore_InputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeAnalysisScoreRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeAnalysisScore_OutputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeAnalysisScoreResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeAggregateScore_InputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeAggregateScoreRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeAggregateScore_OutputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeAggregateScoreResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteAnalysisResult_InputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteAnalysisResultRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteAnalysisResult_OutputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteAnalysisResultResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetMaximumNodeCapacity_InputMessage">
+      <wsdl:part name="parameters" element="iad:GetMaximumNodeCapacityRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetMaximumNodeCapacity_OutputMessage">
+      <wsdl:part name="parameters" element="iad:GetMaximumNodeCapacityResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetHeatmapImage_InputMessage">
+      <wsdl:part name="parameters" element="iad:GetHeatmapImageRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_GetHeatmapImage_OutputMessage">
+      <wsdl:part name="parameters" element="iad:GetHeatmapImageResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_AddCell_InputMessage">
+      <wsdl:part name="parameters" element="iad:AddCellRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_AddCell_OutputMessage">
+      <wsdl:part name="parameters" element="iad:AddCellResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteCell_InputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteCellRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteCell_OutputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteCellResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_EditCell_InputMessage">
+      <wsdl:part name="parameters" element="iad:EditCellRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_EditCell_OutputMessage">
+      <wsdl:part name="parameters" element="iad:EditCellResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteROIAnalysisResult_InputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteROIAnalysisResultRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_DeleteROIAnalysisResult_OutputMessage">
+      <wsdl:part name="parameters" element="iad:DeleteROIAnalysisResultResponse"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeDBAggregateScore_InputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeDBAggregateScoreRequest"/>
+   </wsdl:message>
+   <wsdl:message name="ImageAnalysis_ComputeDBAggregateScore_OutputMessage">
+      <wsdl:part name="parameters" element="iad:ComputeDBAggregateScoreResponse"/>
+   </wsdl:message>
+   <wsdl:portType name="ImageAnalysisServicePortType">
+      <wsdl:operation name="StartAnalysis">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/StartAnalysis" message="iad:ImageAnalysis_StartAnalysis_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/StartAnalysisResponse" message="iad:ImageAnalysis_StartAnalysis_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="StopAnalysis">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/StopAnalysis" message="iad:ImageAnalysis_StopAnalysis_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/StopAnalysisResponse" message="iad:ImageAnalysis_StopAnalysis_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetAnalysisResult">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/GetAnalysisResult" message="iad:ImageAnalysis_GetAnalysisResult_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/GetAnalysisResultResponse" message="iad:ImageAnalysis_GetAnalysisResult_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetAnalysisProgress">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/GetAnalysisProgress" message="iad:ImageAnalysis_GetAnalysisProgress_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/GetAnalysisProgressResponse" message="iad:ImageAnalysis_GetAnalysisProgress_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetAlgorithmInformation">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/GetAlgorithmInformation" message="iad:ImageAnalysis_GetAlgorithmInformation_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/GetAlgorithmInformationResponse" message="iad:ImageAnalysis_GetAlgorithmInformation_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeAnalysisScore">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/ComputeAnalysisScore" message="iad:ImageAnalysis_ComputeAnalysisScore_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/ComputeAnalysisScoreResponse" message="iad:ImageAnalysis_ComputeAnalysisScore_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeAggregateScore">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/ComputeAggregateScore" message="iad:ImageAnalysis_ComputeAggregateScore_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/ComputeAggregateScoreResponse" message="iad:ImageAnalysis_ComputeAggregateScore_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteAnalysisResult">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/DeleteAnalysisResult" message="iad:ImageAnalysis_DeleteAnalysisResult_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/DeleteAnalysisResultResponse" message="iad:ImageAnalysis_DeleteAnalysisResult_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetMaximumNodeCapacity">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/GetMaximumNodeCapacity" message="iad:ImageAnalysis_GetMaximumNodeCapacity_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/GetMaximumNodeCapacityResponse" message="iad:ImageAnalysis_GetMaximumNodeCapacity_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetHeatmapImage">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/GetHeatmapImage" message="iad:ImageAnalysis_GetHeatmapImage_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/GetHeatmapImageResponse" message="iad:ImageAnalysis_GetHeatmapImage_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="AddCell">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/AddCell" message="iad:ImageAnalysis_AddCell_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/AddCellResponse" message="iad:ImageAnalysis_AddCell_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteCell">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/DeleteCell" message="iad:ImageAnalysis_DeleteCell_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/DeleteCellResponse" message="iad:ImageAnalysis_DeleteCell_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="EditCell">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/EditCell" message="iad:ImageAnalysis_EditCell_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/EditCellResponse" message="iad:ImageAnalysis_EditCell_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeDBAggregateScore">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/ComputeDBAggregateScore" message="iad:ImageAnalysis_ComputeDBAggregateScore_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/ComputeDBAggregateScoreResponse" message="iad:ImageAnalysis_ComputeDBAggregateScore_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteROIAnalysisResult">
+         <wsdl:input wsaw:action="http://hostname.com/imageAnalysis/DeleteROIAnalysisResult" message="iad:ImageAnalysis_DeleteROIAnalysisResult_InputMessage"/>
+         <wsdl:output wsaw:action="http://hostname.com/imageAnalysis/DeleteROIAnalysisResultResponse" message="iad:ImageAnalysis_DeleteROIAnalysisResult_OutputMessage"/>
+         <wsdl:fault name="Error" wsaw:action="http://hostname.com/imageAnalysis/Error" message="iad:ImageAnalysis_ErrorMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ImageAnalysisServiceBinding" type="iad:ImageAnalysisServicePortType">
+      <wsp:PolicyReference URI="#mtomBindingPolicy"/>
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="StartAnalysis">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/StartAnalysis" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="StopAnalysis">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/StopAnalysis" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="GetAnalysisResult">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/GetAnalysisResult" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="GetAnalysisProgress">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/GetAnalysisProgress" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="GetAlgorithmInformation">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/GetAlgorithmInformation" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeAnalysisScore">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/ComputeAnalysisScore" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeAggregateScore">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/ComputeAggregateScore" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteAnalysisResult">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/DeleteAnalysisResult" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="GetMaximumNodeCapacity">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/GetMaximumNodeCapacity" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="GetHeatmapImage">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/GetHeatmapImage" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="AddCell">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/AddCell" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteCell">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/DeleteCell" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="EditCell">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/EditCell" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="ComputeDBAggregateScore">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/ComputeDBAggregateScore" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteROIAnalysisResult">
+         <soap:operation soapAction="http://hostname.com/imageAnalysis/DeleteROIAnalysisResult" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+         <wsdl:fault name="Error">
+            <soap:fault name="Error" use="literal"/>
+         </wsdl:fault>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="ImageAnalysisService">
+      <wsdl:port name="ImageAnalysisServicePort" binding="iad:ImageAnalysisServiceBinding">
+         <soap:address location="http://10.21.1.254:9184/imageAnalysis/service/breastpanel/her2ruo"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

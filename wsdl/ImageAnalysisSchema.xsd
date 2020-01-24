@@ -1,0 +1,282 @@
+﻿<?xml version="1.0"?>
+<xsd:schema targetNamespace="http://hostname.com/imageAnalysis/schema"
+            xmlns:ias="http://hostname.com/imageAnalysis/schema"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+
+  <xsd:complexType name="AlgorithmInformation">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="algorithmId" type="xsd:string"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="algorithmName" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="algorithmDescription" type="xsd:string"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="isIVD" type="xsd:boolean"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="inputParameterDefinitionGroup" type="ias:ParameterDefinitionGroup"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="outputParameterDefinitionGroup" type="ias:ParameterDefinitionGroup"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="markerGroup" type="ias:MarkerGroup"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="prognosticGroup" type="ias:PrognosticGroup"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="tissueType" type="xsd:string"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="cloneType" type="xsd:string"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="cloneVendor" type="xsd:string"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="wtaSupported" type="xsd:boolean"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="pseudoColorLegend" type="ias:PseudoColorLegend"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="supportedMagnification" type="xsd:float"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="supportedImageFormats" type="ias:StringList"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="supportedScanners" type="ias:StringList"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="algorithmProvidesPrognosticScore" type="xsd:boolean"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="overlayImage" type="ias:OverlayImage"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="versionNumber" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="OutputType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="NONE"/>
+      <xsd:enumeration value="ATTACHMENT"/>
+      <xsd:enumeration value="FILE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="OutputDestination">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="outputType" type="ias:OutputType"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="filePath" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AnalysisRequest">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="image" type="ias:Image"></xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="inputParameters" type="ias:ParameterGroup"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="preProcess" type="xsd:boolean"/>
+    </xsd:sequence>
+    <xsd:attribute name="algorithmId" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="AnalysisData">
+    <xsd:choice>
+      <xsd:element name="data" type="xsd:base64Binary" xmime:expectedContentTypes="*/*"/>
+      <xsd:element name="filePath" type="xsd:string"/>
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="AnalysisResponse">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="outputParameters" type="ias:ParameterGroup"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="overlayImage" type="ias:Image"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Annotations">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="region" type="ias:Region"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ColorType">
+    <xsd:sequence>
+      <xsd:element name="r" type="xsd:unsignedByte"/>
+      <xsd:element name="g" type="xsd:unsignedByte"/>
+      <xsd:element name="b" type="xsd:unsignedByte"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="RegionType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="Inclusion"/>
+      <xsd:enumeration value="Exclusion"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="ShapeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="Rectangle"/>
+      <xsd:enumeration value="Polygon"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="Region">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="vertex" type="ias:Vertex"/>
+    </xsd:sequence>
+    <xsd:attribute name="type" use="required" type="ias:RegionType"/>
+    <xsd:attribute name="shape" use="required" type="ias:ShapeType"/>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string" use="optional"/>
+    <xsd:attribute name="areaInPixels" type="xsd:long" use="optional"/>
+    <xsd:attribute name="areaInMicrons" type="xsd:double" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Image">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="imsInfo" type="ias:ImsInfo"/>
+      <xsd:element minOccurs="1" maxOccurs="1" name="imageId" type="xsd:int"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="annotations" type="ias:Annotations"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ImsInfo">
+    <xsd:sequence>
+      <xsd:element name="url" type="xsd:string"/>
+      <xsd:element name="authToken" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="IntegerList">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="1" name="data" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Marker">
+    <xsd:sequence>
+      <xsd:element name="markerName" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="MarkerGroup">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="marker" type="ias:Marker"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="MinMaxRangeType">
+    <xsd:attribute name="min" type="xsd:float" use="required"/>
+    <xsd:attribute name="max" type="xsd:float" use="required"/>
+    <xsd:attribute name="minimumIncrement" type="xsd:float" use="required"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="ParameterType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="BOOL"/>
+      <xsd:enumeration value="DOUBLE"/>
+      <xsd:enumeration value="FLOAT"/>
+      <xsd:enumeration value="INT"/>
+      <xsd:enumeration value="STRING"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name ="Parameter">
+    <xsd:attribute name="id" type="xsd:long" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="value" type="xsd:string" use="required"/>
+    <xsd:attribute name="type" use="required" type="ias:ParameterType"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ParameterDefinition">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="defaultValue" type="xsd:string"/>
+      <xsd:choice minOccurs="0" maxOccurs="1">
+        <xsd:element minOccurs="0" maxOccurs="1" name="minMaxRange" type="ias:MinMaxRangeType"/>
+        <xsd:element minOccurs="0" maxOccurs="1" name="stringList" type="ias:StringList"/>
+        <xsd:element minOccurs="0" maxOccurs="1" name="integerList" type="ias:IntegerList"/>
+      </xsd:choice>
+      <xsd:element minOccurs="0" maxOccurs="1" name="description" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="unit" type="xsd:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string"/>
+    <xsd:attribute name="parameterName" type="xsd:string"/>
+    <xsd:attribute name="datatype" type="ias:ParameterType"/>
+    <xsd:attribute name="isKey" type="xsd:boolean" use="optional"/>
+    <xsd:attribute name="isScore" type="xsd:boolean" use="optional"/>
+    <xsd:attribute name="suffix" type="xsd:string" use="optional"/>
+    <xsd:attribute name="prefix" type="xsd:string" use="optional"/>
+    <xsd:attribute name="isSlideLevel" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ParameterDefinitionGroup">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="name" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="parameterDefinition" type="ias:ParameterDefinition"/>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="definitionGroup" type="ias:ParameterDefinitionGroup"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name ="ParameterGroup">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="parameter" type="ias:Parameter"/>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="group" type="ias:ParameterGroup"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Vertex">
+    <xsd:sequence>
+      <xsd:element name="x" type="xsd:long"/>
+      <xsd:element name="y" type="xsd:long"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PrognosticGroup">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="prognosticGroupItem" type="ias:PrognosticGroupItem"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="OperatorType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="NONE"/>
+      <xsd:enumeration value="LT"/>
+      <xsd:enumeration value="GT"/>
+      <xsd:enumeration value="LTE"/>
+      <xsd:enumeration value="GTE"/>
+      <xsd:enumeration value="EQ"/>
+      <xsd:enumeration value="BETWEEN"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="ConditionType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="@DUMMY@"/>
+      <xsd:enumeration value="NONE"/>
+      <xsd:enumeration value="AND"/>
+      <xsd:enumeration value="OR"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="PrognosticGroupItem">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="operator" type="ias:OperatorType"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="rightValue" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="parameterName" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="category" type="xsd:string"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="color" type="ias:ColorType"/>
+      <xsd:element minOccurs="0" maxOccurs="2" name="prognosticGroupItem" type="ias:PrognosticGroupItem"/>
+      <xsd:element minOccurs="0" maxOccurs="1" name="condition" type="ias:ConditionType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PseudoColorLegend">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="pseudoColorParam" type="ias:PseudoColorParam"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PseudoColorParam">
+    <xsd:attribute name="paramName" type="xsd:string"/>
+    <xsd:attribute name="r" type="xsd:int" use="required"/>
+    <xsd:attribute name="g" type="xsd:int" use="required"/>
+    <xsd:attribute name="b" type="xsd:int" use="required"/>
+    <xsd:attribute name="id" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="StringList">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="1" name="data" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="OverlayImage">
+    <xsd:sequence>
+	  <xsd:element name="threshold" type="xsd:int"/>
+      <xsd:element name="opacity" type="xsd:float"/>
+      <xsd:element name="type" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
