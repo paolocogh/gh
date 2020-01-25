@@ -71,7 +71,9 @@ class GenericAlgoClient:
         response = self.client.service.GetAnalysisResult(analysisRequestId)
         return response
 
+"""
 class Her2AlgoClient:
     def __init__(self, name):
         pass
         #TODO: Inherit from GenericAlgoClient
+"""

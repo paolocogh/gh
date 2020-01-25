@@ -5,7 +5,7 @@ import logging
 
 class Helper:
     #Helper functions for AlgoHelper. Segrated so only AlgoHelper methods are used at the script level
-    def __init__(self):
+    def __init__(self, name="name"):
         pass
 
     def save_soap_message(self, obj):
@@ -28,7 +28,7 @@ class Helper:
 
 class AlgoHelper:
     #Methods used at script level
-    def __init__(self):
+    def __init__(self, name="name"):
         pass
 
     def from_response_get_XML_text(self, response, xpath):
