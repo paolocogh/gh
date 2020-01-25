@@ -50,7 +50,7 @@ pytest -m smoke --alluredir=C:\software\APIFramework\Reports TestCases
 
 ### Folder Structure
 
-'''
+```
 .
 ├── Configuration
 │   └── requirements.txt
@@ -72,11 +72,11 @@ pytest -m smoke --alluredir=C:\software\APIFramework\Reports TestCases
 └── wsdl
     ├── ImageAnalysisDefinitions.wsdl
     └── ImageAnalysisSchema.xsd
-'''
+```
 
 ### Classes
 
-[Image of Classes]: https://i.imgur.com/MU7CF6O.png
+![alt text](https://i.imgur.com/MU7CF6O.png "Logo Title Text 1")
 
 
 ## Acknowledgments
