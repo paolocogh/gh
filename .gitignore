@@ -5,4 +5,4 @@ __pycache__/*
 */__pycache__/*
 Reports/*
 *.pyc
-test_cases/__pycache__/*
+test_cases/__pycache__/*.pyc
