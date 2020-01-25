@@ -14,7 +14,7 @@ What things you need to install the software.
 
 Clone the repository 
 ```
-git checkout https://github.com/paolocogh/gh.git
+git clone https://github.com/paolocogh/gh.git
 ```
 Install Python libraries used in \\root\\smoke\\Configuration\\requirements.txt:
 
