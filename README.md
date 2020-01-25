@@ -12,7 +12,11 @@ What things you need to install the software.
 
 #### Client side 
 
-Python libraries used are in \\APIFramework\Reports\requirements.txt
+Clone the repository 
+```
+git checkout https://github.com/paolocogh/gh.git
+```
+Install Python libraries used in \\root\\smoke\\Configuration\\requirements.txt:
 
 ```
 pip install -r requirements.txt
@@ -53,16 +57,16 @@ pytest -m smoke --alluredir=C:\software\APIFramework\Reports TestCases
 ```
 .
 ├── Configuration
-│   └── requirements.txt
-├── README.md
-├── Reports *HTML reports for Allure*
-├── __init__.py
-├── allure-results *This is where raw test results are stored*
+│   └── requirements.txt                    *Python libraries used*
+├── README.md                               *Recursive case*
+├── Reports                                 *HTML reports for Allure*
+├── __init__.py                             
+├── allure-results                          *This is where raw test results are stored*
 ├── classes
-│   ├── algorithms.py  *Main testing functions called at the script level*
-│   ├── helper.py *Helper functions that are segragated from script level*
+│   ├── algorithms.py                       *Main testing functions called at the script level*
+│   ├── helper.py                           *Helper functions that are segragated from script level*
 │   ├── ims.py 
-│   └── properties.py *Global configurations like IP of Webservice to hit*
+│   └── properties.py                       *Global configurations like IP of Webservice to hit*
 ├── pytest.ini
 ├── test_cases 
 │   ├── test_UID280_Restrict_to_BIF.py
@@ -77,6 +81,11 @@ pytest -m smoke --alluredir=C:\software\APIFramework\Reports TestCases
 ### Classes
 
 ![alt text](https://i.imgur.com/MU7CF6O.png "Logo Title Text 1")
+
+* GenericAlgoClient - Contains methods used to make SOAP requests to the algorithm
+* AlgoHelper - Contains Methods to parse response from server. All methods called at test script level
+* Helper - Contains methods to help parsing but never called at script level. Composite class of AlgoHelper.
+* Properties - Class containing all global variables - instead of having them float around
 
 
 ## Acknowledgments
